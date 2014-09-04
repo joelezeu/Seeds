@@ -56,14 +56,15 @@ public class HomeFragment extends Fragment {
 
 	private void populateHomList() {
 		// TODO Auto-generated method stub
+		home.add(new Home("Help Start a Tomato Business", "SME/SMALL BUSINESS",
+				R.drawable.tomato));
 		home.add(new Home("Help cure Ebola", "TECHNOLOGY",
 				R.drawable.ebola));
 		home.add(new Home("Help cure cancer", "HEALTH/MEDICAL",
 				R.drawable.ayocanc));
 		home.add(new Home("Disaster in Anambra", "ENVIRONMENT",
 				R.drawable.floods));
-		home.add(new Home("Help Start a Tomato Business", "SME/SMALL BUSINESS",
-				R.drawable.tomato));
+		
 	}
 
 	private void populateListView() {

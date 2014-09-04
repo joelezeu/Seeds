@@ -15,7 +15,7 @@
         <item>Trending</item>
         <item>How it Works</item>
         <item>Start Campaign</item>
-        <item>Settings</item>
+        <item>About Us</item>
     </string-array>
 
     <!-- Nav Drawer List Item Icons -->
@@ -27,7 +27,7 @@
         <item>@drawable/ic_trending</item>
         <item>@drawable/ic_howitworks</item>
         <item>@drawable/ic_start</item>
-        <item>@drawable/ic_whats_hot</item>
+        <item>@drawable/ic_about</item>
     </array>
 
     <!-- Content Description -->

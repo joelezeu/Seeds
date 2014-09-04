@@ -6,6 +6,7 @@ import java.util.List;
 import com.codecamp14.seeds.models.Trend;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +37,7 @@ public class Trending extends Fragment {
  
         View rootView = inflater.inflate(R.layout.fragment_trending, container, false);
         Trendlist = (ListView) rootView.findViewById(R.id.TrenidnglistView1);
-		trendHomeList();
+		trendHomeList(trending);
 		trendListView();
 		
 		Trendlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -55,37 +56,37 @@ public class Trending extends Fragment {
 
 	private void trendListView() {
 		// TODO Auto-generated method stub
-		trending.add(new Trend("Thank you Jesus", "TECHNOLOGY",
-				R.drawable.ayocanc));
 		trending.add(new Trend("Mathew Gush", "HEALTH/MEDICAL",
+				R.drawable.floods));
+		trending.add(new Trend("Help cure cancer", "ARTS",
 				R.drawable.ayocanc));
-		trending.add(new Trend("Process dot PHP", "ARTS",
-				R.drawable.ayocanc));
-		trending.add(new Trend("Bernard the Python guy", "BOOKS",
-				R.drawable.ayocanc));
-		trending.add(new Trend("Android App Dev", "SME/SMALL BUSINESS",
-				R.drawable.ayocanc));
+		trending.add(new Trend("Help Start a Tomato business", "SME/SMALL BUSINESS",
+				R.drawable.tomato));
 		trending.add(new Trend("I want to learn Python", "NO P",
-				R.drawable.ayocanc));
+				R.drawable.ebola));
 		trending.add(new Trend("This man", "THANKS",
 				R.drawable.ayocanc));
-		trending.add(new Trend(getTag(), getTag(), 0));
 	}
 
-	private void trendHomeList() {
+	private void trendHomeList(List<Trend> tren) {
 		// TODO Auto-generated method stub
-		ArrayAdapter<Trend> adapter = new TrendingListAdapter();
+		ArrayAdapter<Trend> adapter = new TrendingListAdapter(getActivity(),R.layout.list_trending,tren);
 //		String[] a= {"a","b","c"};
 //		ArrayAdapter<String> array = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, a);
 		Trendlist.setAdapter(adapter);
 	}
 	private class TrendingListAdapter extends ArrayAdapter<Trend> {
+		
+		private List<Trend> data;
+		public TrendingListAdapter(Context context, int resource, List<Trend> objects) {
+			super(context, resource, objects);
+			this.data=objects;
 
-		public TrendingListAdapter() {
-			super(getActivity(), R.layout.list_trending, trending);
-			
-			// TODO Auto-generated constructor stub
-		}
+//		public TrendingListAdapter() {
+//			super(getActivity(), R.layout.list_trending, trending);
+//			
+//			// TODO Auto-generated constructor stub
+//		}
 }
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
@@ -97,10 +98,10 @@ public class Trending extends Fragment {
 		
 		Trendingimg = (ImageView) itemView.findViewById(R.id.TrendingimageView);
 		Trendingtv = (TextView) itemView.findViewById(R.id.TrendingTextViewtitle);
-		//Trendingcat = (TextView) itemView.findViewById(R.id.TrendingtextView);
+		Trendingcat = (TextView) itemView.findViewById(R.id.TrendingtextView);
 		
 		
-		Trend setStuff = trending.get(position);
+		Trend setStuff = this.data.get(position);
 		
 		Trendingimg.setImageResource(setStuff.getTrendingPic());
 
@@ -108,4 +109,5 @@ public class Trending extends Fragment {
 		Trendingcat.setText(setStuff.getTrendingCat());
 		return itemView;
 	}
+}
 }

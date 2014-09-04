@@ -32,10 +32,7 @@ public class SignUpActivity extends Activity {
 		mPassword = (EditText)findViewById(R.id.SignUPpasswordField);
 		email = (EditText)findViewById(R.id.SignUPemailField);
 		signUpButton = (Button)findViewById(R.id.SignUPbutton);
-		
-		
-		
-		
+
 		
 		signUpButton.setOnClickListener(new View.OnClickListener() {
 			

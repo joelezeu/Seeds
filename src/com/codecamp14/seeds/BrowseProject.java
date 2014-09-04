@@ -23,6 +23,15 @@ public class BrowseProject extends Fragment {
 	
 	private static List<Browse> home = new ArrayList<Browse>();
 	
+	static{
+		home.add(new Browse("ARTS", "Creative Handworks"));
+		home.add(new Browse("TECHNOLOGY", "ICT project or related"));
+		home.add(new Browse("SMALL BUSINESS", "SMEs and Start Ups"));
+		home.add(new Browse("HEALTH/MEDICALS", "Emergency/Disease"));
+		home.add(new Browse("ENVIRONMENT", "Erosion, Floods"));
+		home.add(new Browse("OTHERS", "From all works off life."));
+	}
+	
 	public BrowseProject() {
 	}
 
@@ -35,7 +44,7 @@ public class BrowseProject extends Fragment {
 		browseList = (ListView)rootView.findViewById(R.id.browseList);
 		
 		BrowseListView();
-		BrosweHomeList();
+//		BrosweHomeList();
 		
 		browseList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -53,15 +62,15 @@ public class BrowseProject extends Fragment {
 		return rootView;
 	}
 	
-	private void BrosweHomeList() {
-		// TODO Auto-generated method stub
-		home.add(new Browse("ARTS", "Creative Handworks"));
-		home.add(new Browse("TECHNOLOGY", "ICT project or related"));
-		home.add(new Browse("SMALL BUSINESS", "SMEs and Start Ups"));
-		home.add(new Browse("HEALTH/MEDICALS", "Emergency/Disease"));
-		home.add(new Browse("ENVIRONMENT", "Erosion, Floods"));
-		home.add(new Browse("OTHERS", "From all works off life."));
-	}
+//	private void BrosweHomeList() {
+//		// TODO Auto-generated method stub
+//		home.add(new Browse("ARTS", "Creative Handworks"));
+//		home.add(new Browse("TECHNOLOGY", "ICT project or related"));
+//		home.add(new Browse("SMALL BUSINESS", "SMEs and Start Ups"));
+//		home.add(new Browse("HEALTH/MEDICALS", "Emergency/Disease"));
+//		home.add(new Browse("ENVIRONMENT", "Erosion, Floods"));
+//		home.add(new Browse("OTHERS", "From all works off life."));
+//	}
 
 	private void BrowseListView() {
 		// TODO Auto-generated method stub

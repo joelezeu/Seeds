@@ -50,14 +50,13 @@ public class MainActivity extends Activity {
 		
 		if(currentUser == null){
 		Intent i = new Intent(this, LoginActivity.class);
-		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivity(i);
 		}else{
 			Log.i(TAG, currentUser.getUsername());
 		}
-		//getActionBar().getThemedContext().setTheme(resid);
-
+		
 		mTitle = mDrawerTitle = getTitle();
 
 		// load slide menu items
