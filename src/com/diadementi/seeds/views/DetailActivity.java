@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import com.codecamp14.seeds.R;
 import com.codecamp14.seeds.models.Category;
-import com.diadementi.seeds.controllers.CampaignFragment;
+import com.diadementi.seeds.controllers.AddCampaignFragment;
 import com.diadementi.seeds.helpers.UrlLink;
 import com.diadementi.seeds.models.Campaign;
 import com.diadementi.seeds.views.ListFragment.Type;
@@ -48,8 +48,8 @@ public class DetailActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_details);
-//		LinearLayout l=(LinearLayout)findViewById(R.id.action);
-//		l.setVisibility(View.GONE);
+		LinearLayout l=(LinearLayout)findViewById(R.id.action);
+		l.setVisibility(View.GONE);
 		pref=getSharedPreferences(PREFS_NAME, 0);
 		email=pref.getString("email", null);
 		cImage=(ImageView)this.findViewById(R.id.imageView);

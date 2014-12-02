@@ -1,6 +1,7 @@
 package com.diadementi.seeds.views;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
@@ -10,17 +11,42 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.codecamp14.seeds.R;
-import com.diadementi.seeds.controllers.CampaignFragment;
+import com.diadementi.seeds.controllers.AddCampaignFragment;
+import com.diadementi.seeds.controllers.EditCampaignFragment;
+import com.diadementi.seeds.views.ListFragment.Type;
 
 public class Add_EditActivity extends ActionBarActivity {
+	Type t = Type.PRI;
+	String mode = "add";
+	Intent i;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add__edit);
 		if (savedInstanceState == null) {
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.container, new CampaignFragment()).commit();
+			i = getIntent();
+			String type = i.getExtras().containsKey("type") ? i
+					.getStringExtra("type") : "PUB";
+			t = Type.valueOf(type);
+			mode = i.getExtras().containsKey("mode") ? i.getStringExtra("mode")
+					: mode;
+			if (savedInstanceState == null) {
+				mode = i.getExtras().containsKey("mode") ? i
+						.getStringExtra("mode") : mode;
+				switch (mode) {
+				case "add":
+					getSupportFragmentManager().beginTransaction()
+							.add(R.id.container, new AddCampaignFragment())
+							.commit();
+
+					break;
+				case "edit":
+					getSupportFragmentManager().beginTransaction()
+							.add(R.id.container, new EditCampaignFragment())
+							.commit();
+				}
+			}
 		}
 	}
 

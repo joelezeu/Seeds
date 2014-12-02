@@ -10,17 +10,21 @@
         android:title="@string/action_settings"
         app:showAsAction="never"/>
     -->
-<!--     <item
+    <item
         android:id="@+id/action_share"
         android:icon="@drawable/ic_action_share"
         android:title="@string/action_share"
         app:showAsAction="ifRoom|withText">
-    </item>
+    </item> 
+
+   
     <item
         android:id="@+id/donate"
         android:title="@string/action_donate"
-        app:showAsAction="always"
-        >"
-    </item> -->
+        android:icon="@drawable/icon"
+        app:showAsAction="ifRoom|withText"
+        >
+    </item>
+    
 
 </menu>

@@ -154,12 +154,13 @@ public class DetailsFragment extends Fragment {
 		pBar.setMax(100);
 		WebSettings settings = webView.getSettings();
 		settings.setJavaScriptCanOpenWindowsAutomatically(true);
-		String title = webView.getTitle();
-		getActivity().setTitle(title);
+		
 		settings.setJavaScriptEnabled(true);
 		webView.setWebChromeClient(new MyWebChrome());
 		webView.setWebViewClient(new MyWebClient());
 		webView.loadUrl(url);
+		String title = webView.getTitle();
+		getActivity().setTitle(title);
 		return rootView;
 	}
 

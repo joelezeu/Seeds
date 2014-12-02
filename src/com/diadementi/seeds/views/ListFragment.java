@@ -3,9 +3,12 @@
  */
 package com.diadementi.seeds.views;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import org.apache.http.client.ClientProtocolException;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -29,6 +32,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.codecamp.libs.RestClient;
 import com.codecamp.libs.RestClient.RequestMethod;
@@ -126,18 +130,20 @@ public class ListFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				// TODO Auto-generated method stub
 				Campaign c=(Campaign)parent.getItemAtPosition(position);
 				String url=UrlLink.getCampaignView(c.getId());
-				Intent i=new Intent(getActivity(),DetailActivity.class);
 				String json=new Gson().toJson(c);
-				i.putExtra("type",type.toString());
+				if(type==Type.PUB){
+				Intent i=new Intent(getActivity(),DetailActivity.class);
 				i.putExtra("json", json);
 				i.putExtra("url", url);
-				int requestCode=0;
-				startActivityForResult(i, requestCode);
-//				((MainActivity) getActivity())
-//				.displayCampaign(parent, position);
+				startActivity(i);
+				}else{
+					Intent i=new Intent(getActivity(),UserDetailActivity.class);
+					i.putExtra("json", json);
+					i.putExtra("url", url);
+					startActivity(i);
+				}
 
 			}
 		});
@@ -222,13 +228,13 @@ public class ListFragment extends Fragment {
 
 	private void edit() {
 		// TODO Auto-generated method stub
-		Intent intent=new Intent(getActivity(),DetailActivity.class);
+		Intent intent=new Intent(getActivity(),Add_EditActivity.class);
 		intent.putExtra("mode", "edit");
 		startActivity(intent);
 	}
 	private void add() {
 		// TODO Auto-generated method stub
-		Intent intent=new Intent(getActivity(),DetailActivity.class);
+		Intent intent=new Intent(getActivity(),Add_EditActivity.class);
 		intent.putExtra("mode", "add");
 		startActivity(intent);
 	}
@@ -268,6 +274,7 @@ public class ListFragment extends Fragment {
 			try {
 				dami.AddHeader("Authorization", apiKey);
 				Log.e("apikey",apiKey);
+				dami.setTimeOut(30000);
 				dami.Execute(RequestMethod.GET);
 				int code=dami.getResponseCode();
 				if(code==400||code==401){
@@ -278,17 +285,31 @@ public class ListFragment extends Fragment {
 				};
 				text = dami.getResponse();
 				Log.i("json data", text);
-				JSONObject mainObject = new JSONObject(text);
-				Log.i("json object", mainObject.toString());
-				//int jsonresponse=mainObject.getInt("response");
-				JSONArray dataObject = mainObject.getJSONArray("data");
-				Log.e("dataObject",dataObject.toString());
-				for (int i = 0; i < dataObject.length(); i++) {
-					dataS.add( new Campaign().getInstance((JSONObject)dataObject.get(i)));
-				}
+				JSONParser(text);
 				return response = "successful";
-			} catch (Exception ex) {
-				return response;
+			} catch (ClientProtocolException ex) {
+				Log.e("ClientException thrown",ex.getMessage());
+				
+			} catch(IOException ex){
+				Log.e("IOexception",ex.getMessage());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return response;
+		}
+
+		/**
+		 * @throws JSONException
+		 */
+		public void JSONParser(String response) throws JSONException {
+			JSONObject mainObject = new JSONObject(response);
+			Log.i("json object", mainObject.toString());
+			//int jsonresponse=mainObject.getInt("response");
+			JSONArray dataObject = mainObject.getJSONArray("data");
+			Log.e("dataObject",dataObject.toString());
+			for (int i = 0; i < dataObject.length(); i++) {
+				dataS.add( new Campaign().getInstance((JSONObject)dataObject.get(i)));
 			}
 		}
 
@@ -302,7 +323,7 @@ public class ListFragment extends Fragment {
 				Log.e("arraylist ", data.toString());
 			} else {
 				result = "Unable to Connect";
-				Alert.showAlert(getActivity(), result,null);
+				Toast.makeText(getActivity(), result,Toast.LENGTH_LONG).show();
 			}
 			pBar.setVisibility(View.GONE);
 			//Toast.makeText(getActivity(), result, Toast.LENGTH_LONG).show();	

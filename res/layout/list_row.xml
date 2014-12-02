@@ -1,35 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="wrap_content"
+    android:background="@drawable/list_selector"
+    android:padding="8dp" >
 
     <ImageView
         android:id="@+id/thumbnail"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
+        android:adjustViewBounds="true"
         android:contentDescription="@string/thumnail_of_campaign"
-        android:src="@drawable/blank_campaign"
+        android:paddingEnd="0dp"
+        android:paddingLeft="5dp"
+        android:paddingStart="0dp"
         android:scaleType="fitXY"
-        android:adjustViewBounds="true" />
+        android:src="@drawable/blank_campaign" />
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/thumbnail"
+        android:layout_toEndOf="@+id/thumbnail"
         android:layout_toRightOf="@+id/thumbnail"
+        android:ellipsize="end"
+        android:paddingEnd="0dp"
+        android:paddingRight="10dp"
+        android:paddingStart="0dp"
+        android:singleLine="true"
+        android:textStyle="bold"
         android:text="@string/title"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        
-        android:layout_toRightOf="@+id/thumbnail"
         android:layout_below="@+id/title"
-        android:text="@string/category" />
+        android:layout_marginTop="5dp"
+        android:layout_toEndOf="@+id/thumbnail"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:paddingEnd="0dp"
+        android:paddingRight="10dp"
+        android:paddingStart="0dp"
+        android:textColor="?android:attr/textColorSecondaryInverse"
+        android:text="@string/category"
+        android:textAllCaps="true"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/dateCreated"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/thumbnail"
+        android:layout_alignParentEnd="true" 
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="5dp"
+        android:paddingEnd="0dp"
+        android:paddingRight="10dp"
+        android:paddingStart="0dp"
+        android:textColor="?android:attr/textColorTertiaryInverse"
+        android:text="@string/date_created"
+        android:textAllCaps="true"
+        android:textSize="12sp" />
 
 </RelativeLayout>

@@ -23,7 +23,6 @@ import com.codecamp14.seeds.login.LoginActivity;
 import com.diadementi.seeds.helpers.UrlLink;
 import com.diadementi.seeds.views.ListFragment;
 import com.diadementi.seeds.views.ListFragment.Type;
-import com.parse.ParseUser;
 //import android.app.Fragment;
 
 public class MainActivity extends ActionBarActivity {

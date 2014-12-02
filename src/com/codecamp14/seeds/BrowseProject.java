@@ -63,7 +63,7 @@ public class BrowseProject extends Fragment {
 				b.putString("title", category.getName());
 				fragment.setArguments(b);
 				getFragmentManager().beginTransaction()
-				.replace(R.id.frame_container, fragment).commit();
+				.replace(R.id.frame_container, fragment).addToBackStack(null).commit();
 				
 //				for(int i=0;i<BrosweHomeList().length; i++){
 //					

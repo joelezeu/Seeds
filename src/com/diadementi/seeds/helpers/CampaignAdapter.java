@@ -1,8 +1,13 @@
 package com.diadementi.seeds.helpers;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import android.content.Context;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,12 +58,24 @@ public class CampaignAdapter extends ArrayAdapter<Campaign> {
 		category.setText(s.getCategory().getName());
 		Picasso.with(ctx)
 		.load(s.getImageUrl())
-		.resize(50, 50)
+		.resize(80, 80)
 		.centerCrop()
 		.placeholder(R.drawable.blank_campaign)
 		.error(R.drawable.ic_launcher)
 		.into(image);
 		Log.i("image url",s.getImageUrl());
+		TextView date=(TextView)convertView.findViewById(R.id.dateCreated);
+		String cdate=s.getTimeCreated();
+		SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			Date mdateObject=format.parse(cdate);
+			long time=mdateObject.getTime();
+			long now=new Date().getTime();
+			date.setText(DateUtils.getRelativeTimeSpanString(time, now, DateUtils.DAY_IN_MILLIS).toString());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return convertView;
 	}
 	public Campaign getItem(int i){
