@@ -30,9 +30,10 @@ import com.diadementi.seeds.helpers.UrlLink;
 import com.diadementi.seeds.models.Campaign;
 import com.diadementi.seeds.views.ListFragment.Type;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.squareup.picasso.Picasso;
 
-public class DetailActivity extends ActionBarActivity {
+public class UserDetailActivity extends ActionBarActivity {
 	Intent i;
 	Type t = Type.PUB;
 	String mode = "view";
@@ -49,6 +50,7 @@ public class DetailActivity extends ActionBarActivity {
 	String email;
 	TextView cTimeCreated;
 	TextView cAuthor;
+	final static int REQUEST_EDIT = 1;
 	public static final String PREFS_NAME = "MyPrefsFile";
 
 	@Override
@@ -71,50 +73,61 @@ public class DetailActivity extends ActionBarActivity {
 		i = getIntent();
 		String type = i.getExtras().containsKey("type") ? i
 				.getStringExtra("type") : "PUB";
-		t = Type.valueOf(type);
-		mode = i.getExtras().containsKey("mode") ? i.getStringExtra("mode")
-				: mode;
-		if (savedInstanceState == null) {
-			mode = i.getExtras().containsKey("mode") ? i.getStringExtra("mode")
-					: mode;
-			// mode = i.getStringExtra("mode");
-			// mode=TextUtils.isEmpty(mode)?"view":mode;
+				t = Type.valueOf(type);
+				mode = i.getExtras().containsKey("mode") ? i.getStringExtra("mode")
+						: mode;
+				if (savedInstanceState == null) {
+					mode = i.getExtras().containsKey("mode") ? i.getStringExtra("mode")
+							: mode;
+					// mode = i.getStringExtra("mode");
+					// mode=TextUtils.isEmpty(mode)?"view":mode;
 
-			switch (mode) {
-			case "add":
-				// getSupportFragmentManager().beginTransaction()
-				// .add(R.id.container, new CampaignFragment())
-				// .commit();
-				Intent in = new Intent(this, Add_EditActivity.class);
-				in.putExtras(i);
-				in.putExtra("mode", "add");
-				startActivity(in);
-				break;
-			case "edit":
-				// getSupportFragmentManager().beginTransaction()
-				// .add(R.id.container, new CampaignFragment())
-				// .commit();
-				Intent inte = new Intent(this, Add_EditActivity.class);
-				inte.putExtras(i);
-				inte.putExtra("mode", "edit");
-				startActivity(inte);
-				break;
-			default:
-				// String url = i.getStringExtra("url");
-				// getSupportFragmentManager().beginTransaction()
-				// .add(R.id.container, t.equals(Type.PRI)?new
-				// DetailsFragment(url,MODE.PRI):new DetailsFragment(url))
-				// .commit();
+					switch (mode) {
+					case "add":
+						// getSupportFragmentManager().beginTransaction()
+						// .add(R.id.container, new CampaignFragment())
+						// .commit();
+						Intent in = new Intent(this, Add_EditActivity.class);
+						in.putExtras(i);
+						in.putExtra("mode", "add");
+						startActivity(in);
+						break;
+					case "edit":
+						// getSupportFragmentManager().beginTransaction()
+						// .add(R.id.container, new CampaignFragment())
+						// .commit();
+						Intent inte = new Intent(this, Add_EditActivity.class);
+						inte.putExtras(i);
+						inte.putExtra("mode", "edit");
+						startActivity(inte);
+						break;
+					default:
+						// String url = i.getStringExtra("url");
+						// getSupportFragmentManager().beginTransaction()
+						// .add(R.id.container, t.equals(Type.PRI)?new
+						// DetailsFragment(url,MODE.PRI):new DetailsFragment(url))
+						// .commit();
 
-				String json = "";
-				json = i.getExtras().containsKey("json") ? i
-						.getStringExtra("json") : null;
+						extractCampaignFromJson(i);
+
+					}
+
+				}
+	}
+
+	/**
+	 * @throws JsonSyntaxException
+	 */
+	public void extractCampaignFromJson(Intent i) throws JsonSyntaxException {
+		String json = "";
+		json = i.getExtras().containsKey("json") ? i
+				.getStringExtra("json") : null;
 				if (!TextUtils.isEmpty(json)) {
 					Log.e("c in json", json);
 					c = new Gson().fromJson(json, Campaign.class);
 					Picasso.with(this).load(c.getImageUrl())
-							.placeholder(R.drawable.blank_campaign)
-							.error(R.drawable.ic_launcher).into(cImage);
+					.placeholder(R.drawable.blank_campaign)
+					.error(R.drawable.ic_launcher).into(cImage);
 					Log.e("c title", c.getTitle());
 					cTitle.setText(toCapFirst(c.getTitle()));
 					cat = c.getCategory();
@@ -123,17 +136,13 @@ public class DetailActivity extends ActionBarActivity {
 					cDescText.setText(c.getDesc());
 					String createdAt = c.getTimeCreated();
 					createdAt = convertTime(createdAt);
-					cAuthor.setText(String.format("by %s",c.getCreator()));
+					cAuthor.setText(String.format("by %s", c.getCreator()));
 					if (createdAt != null) {
 						cTimeCreated.setText(createdAt);
 					} else {
 						cTimeCreated.setVisibility(View.INVISIBLE);
 					}
 				}
-
-			}
-
-		}
 	}
 
 	private String toCapFirst(String s) {
@@ -144,7 +153,7 @@ public class DetailActivity extends ActionBarActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.campaign_display, menu);
+		getMenuInflater().inflate(R.menu.detail_priv, menu);
 		return true;
 	}
 
@@ -154,24 +163,34 @@ public class DetailActivity extends ActionBarActivity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		 switch (id) {
+		switch (id) {
 		// // Respond to the action bar's Up/Home button
 		// // case android.R.id.home:
 		// // NavUtils.navigateUpFromSameTask(this);
 		// // return true;
-		 case R.id.action_share:
-		 sharePost();
-		 return true;
-		 case R.id.donate:
-		 donate();
-		 return true;
-		 }
+		case R.id.action_share:
+			sharePost();
+			return true;
+		case R.id.action_edit:
+			edit();
+			return true;
+		case R.id.action_discard:
+			discard();
+			return true;
+		}
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void comment(View view) {
+	private void discard() {
 		// TODO Auto-generated method stub
-		Toast.makeText(this, "commented", Toast.LENGTH_LONG).show();
+
+	}
+
+	public void edit() {
+		Intent intent = new Intent(this, Add_EditActivity.class);
+		intent.putExtras(i);
+		intent.putExtra("mode", "edit");
+		startActivityForResult(intent, REQUEST_EDIT);
 	}
 
 	public void sharePost() {
@@ -183,11 +202,13 @@ public class DetailActivity extends ActionBarActivity {
 		startActivity(shareIntent);
 	}
 
-	public void donate() {
-		String url = UrlLink.donate + "/" + c.getId() + "/" + email;
-		Intent intent = new Intent(Intent.ACTION_VIEW);
-		intent.setData(Uri.parse(url));
-		startActivity(intent);
+	@Override
+	protected void onActivityResult(int arg0, int arg1, Intent arg2) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(arg0, arg1, arg2);
+		if (arg0 == REQUEST_EDIT && arg1 == RESULT_OK){
+			i=arg2;
+		}
 	}
 
 	private String convertTime(String cDate) {
@@ -205,4 +226,11 @@ public class DetailActivity extends ActionBarActivity {
 		}
 		return null;
 	}
+@Override
+protected void onResume() {
+	// TODO Auto-generated method stub
+	super.onResume();
+	extractCampaignFromJson(i);
+}
+
 }

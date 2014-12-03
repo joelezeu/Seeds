@@ -104,7 +104,13 @@ public class Campaign {
 		public void setTotalDonors(int totalDonors) {
 			this.totalDonors = totalDonors;
 		}
-		
+		public double getPercentDonation(){
+			double percent=(totalDonations/goal)*100.0;
+			return percent;
+		}
+		public int getDaysLeft(){
+			return 2;
+		}
 	
 
 }

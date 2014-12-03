@@ -16,6 +16,7 @@ public class Campaign {
 		"total_donations": "0",
 		"total_donors": "0"
 		},*/
+	
 	protected int id;
 	protected String title;
 	protected String desc;
@@ -40,22 +41,22 @@ public class Campaign {
 		 * 
 		 * @param json
 		 */
-		public Campaign getInstance(JSONObject json) {
-			
+		public static Campaign getInstance(JSONObject json) {
+				Campaign mInstance=new Campaign();
 			try{
-				this.setId(json.getInt("id"));
-				this.title=json.getString("title");
-				this.desc=json.getString("brief");
-				this.creator=json.getString("creator");
-				this.timeCreated=json.getString("created");
-				this.goal=json.getInt("goal");
-				this.goalDuration=json.getString("goal_duration");
-				this.totalDonations=json.getInt("total_donations");
-				this.totalDonors=json.getInt("total_donors");
-				this.imageUrl=json.getString("photos");
+				mInstance.setId(json.getInt("id"));
+				mInstance.title=json.getString("title");
+				mInstance.desc=json.getString("brief");
+				mInstance.creator=json.getString("creator");
+				mInstance.timeCreated=json.getString("created");
+				mInstance.goal=json.getInt("goal");
+				mInstance.goalDuration=json.getString("goal_duration");
+				mInstance.totalDonations=json.getInt("total_donations");
+				mInstance.totalDonors=json.getInt("total_donors");
+				mInstance.imageUrl=json.getString("photos");
 				JSONObject cat=json.getJSONObject("category");
-				this.category=new Category(cat.getInt("id"),cat.getString("name"));
-				return this;
+				mInstance.category=new Category(cat.getInt("id"),cat.getString("name"));
+				return mInstance;
 				}catch(Exception m){
 					m.printStackTrace();
 					

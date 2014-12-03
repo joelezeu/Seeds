@@ -44,8 +44,6 @@ import com.diadementi.seeds.helpers.UrlLink;
 import com.diadementi.seeds.models.Campaign;
 import com.google.gson.Gson;
 
-
-
 /**
  * @author user pc
  * 
@@ -57,8 +55,9 @@ public class ListFragment extends Fragment {
 	CampaignAdapter adapter;
 	String url;
 	private Type type;
-	public static enum Type{
-		PRI,PUB;
+
+	public static enum Type {
+		PRI, PUB;
 	}
 
 	public static final String PREFS_NAME = "MyPrefsFile";
@@ -68,35 +67,38 @@ public class ListFragment extends Fragment {
 	/**
 	 * 
 	 */
-	ListFragment(){
+	ListFragment() {
 
 		this(UrlLink.campaigns);
 
 	}
+
 	public ListFragment(String url) {
 		// TODO get adapter at instantiation or onCreate
 		data = new ArrayList<Campaign>();
 		setHasOptionsMenu(true);
-		this.url=url;
-		this.type=Type.PUB;
+		this.url = url;
+		this.type = Type.PUB;
 	}
-	public ListFragment(String url,Type type) {
+
+	public ListFragment(String url, Type type) {
 		// TODO get adapter at instantiation or onCreate
 		data = new ArrayList<Campaign>();
 		setHasOptionsMenu(true);
-		this.url=url;
-		this.type=type;
+		this.url = url;
+		this.type = type;
 	}
 
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.support.v4.app.Fragment#onCreate(android.os.Bundle)
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		// TODO 
-		shared=getActivity().getSharedPreferences(PREFS_NAME, 0);
-		apiKey=shared.getString("api_key", null);
+		// TODO
+		shared = getActivity().getSharedPreferences(PREFS_NAME, 0);
+		apiKey = shared.getString("api_key", null);
 		super.onCreate(savedInstanceState);
 	}
 
@@ -111,17 +113,17 @@ public class ListFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-//		Bundle b=getArguments();
-//		String title=b.containsKey("title")?b.getString("title"):null;
-//		if(title!=null){
-//			getActivity().setTitle(title);
-//		}
+		// Bundle b=getArguments();
+		// String title=b.containsKey("title")?b.getString("title"):null;
+		// if(title!=null){
+		// getActivity().setTitle(title);
+		// }
 		final View rootView = inflater.inflate(R.layout.fragment_main,
 				container, false);
 
 		list = (ListView) rootView.findViewById(R.id.campaignList);
 		pBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-		 pBar.setVisibility(View.INVISIBLE);
+		pBar.setVisibility(View.INVISIBLE);
 		adapter = new CampaignAdapter(getActivity(), R.layout.list_row, data);
 
 		list.setAdapter(adapter);
@@ -130,16 +132,17 @@ public class ListFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				Campaign c=(Campaign)parent.getItemAtPosition(position);
-				String url=UrlLink.getCampaignView(c.getId());
-				String json=new Gson().toJson(c);
-				if(type==Type.PUB){
-				Intent i=new Intent(getActivity(),DetailActivity.class);
-				i.putExtra("json", json);
-				i.putExtra("url", url);
-				startActivity(i);
-				}else{
-					Intent i=new Intent(getActivity(),UserDetailActivity.class);
+				Campaign c = (Campaign) parent.getItemAtPosition(position);
+				String url = UrlLink.getCampaignView(c.getId());
+				String json = new Gson().toJson(c);
+				if (type == Type.PUB) {
+					Intent i = new Intent(getActivity(), DetailActivity.class);
+					i.putExtra("json", json);
+					i.putExtra("url", url);
+					startActivity(i);
+				} else {
+					Intent i = new Intent(getActivity(),
+							UserDetailActivity.class);
 					i.putExtra("json", json);
 					i.putExtra("url", url);
 					startActivity(i);
@@ -151,7 +154,10 @@ public class ListFragment extends Fragment {
 		return rootView;
 
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.support.v4.app.Fragment#onResume()
 	 */
 	@Override
@@ -159,12 +165,14 @@ public class ListFragment extends Fragment {
 		makeRequest(url);
 		super.onResume();
 	}
+
 	public boolean isNetworkAvailable() {
-		ConnectivityManager connectMan=(ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo networkinfo=connectMan.getActiveNetworkInfo();
-		boolean isAvailable=false;
-		if(networkinfo != null&&networkinfo.isConnected()){
-			isAvailable=true;
+		ConnectivityManager connectMan = (ConnectivityManager) getActivity()
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo networkinfo = connectMan.getActiveNetworkInfo();
+		boolean isAvailable = false;
+		if (networkinfo != null && networkinfo.isConnected()) {
+			isAvailable = true;
 		}
 		return isAvailable;
 	}
@@ -176,32 +184,35 @@ public class ListFragment extends Fragment {
 		if (isNetworkAvailable()) {
 			new CampaignFetch().execute(url);
 		} else {
-			Alert.showAlert(getActivity(),getString(R.string.noConnection),null);
+			Alert.showAlert(getActivity(), getString(R.string.noConnection),
+					null);
 		}
 	}
-	
 
-
-	/* (non-Javadoc)
-	 * @see android.support.v4.app.Fragment#onActivityResult(int, int, android.content.Intent)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.support.v4.app.Fragment#onActivityResult(int, int,
+	 * android.content.Intent)
 	 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
-		if(resultCode==Activity.RESULT_OK){
+		if (resultCode == Activity.RESULT_OK) {
 			Alert.showAlert(getActivity(), "I got an answer", null);
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
+
 	/* 
 	 * 
 	 */
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// TODO Auto-generated method stub
-		if(this.type.equals(Type.PRI)){
+		if (this.type.equals(Type.PRI)) {
 			inflater.inflate(R.menu.list_pri, menu);
-		}else{
+		} else {
 			inflater.inflate(R.menu.list, menu);
 		}
 
@@ -213,8 +224,8 @@ public class ListFragment extends Fragment {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
-		int itemId=item.getItemId();
-		switch(itemId){
+		int itemId = item.getItemId();
+		switch (itemId) {
 		case R.id.action_new:
 			add();
 			break;
@@ -224,22 +235,19 @@ public class ListFragment extends Fragment {
 		return super.onOptionsItemSelected(item);
 	}
 
-
-
 	private void edit() {
 		// TODO Auto-generated method stub
-		Intent intent=new Intent(getActivity(),Add_EditActivity.class);
+		Intent intent = new Intent(getActivity(), Add_EditActivity.class);
 		intent.putExtra("mode", "edit");
 		startActivity(intent);
 	}
+
 	private void add() {
 		// TODO Auto-generated method stub
-		Intent intent=new Intent(getActivity(),Add_EditActivity.class);
+		Intent intent = new Intent(getActivity(), Add_EditActivity.class);
 		intent.putExtra("mode", "add");
 		startActivity(intent);
 	}
-
-
 
 	class CampaignFetch extends AsyncTask<String, Void, String> {
 
@@ -273,25 +281,26 @@ public class ListFragment extends Fragment {
 			dami = new RestClient(url[0]);
 			try {
 				dami.AddHeader("Authorization", apiKey);
-				Log.e("apikey",apiKey);
+				Log.e("apikey", apiKey);
 				dami.setTimeOut(30000);
 				dami.Execute(RequestMethod.GET);
-				int code=dami.getResponseCode();
-				if(code==400||code==401){
-					Intent i=new Intent(getActivity(),LoginActivity.class);
+				int code = dami.getResponseCode();
+				if (code == 400 || code == 401) {
+					Intent i = new Intent(getActivity(), LoginActivity.class);
 					i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 					startActivity(i);
-				};
+				}
+				;
 				text = dami.getResponse();
 				Log.i("json data", text);
 				JSONParser(text);
 				return response = "successful";
 			} catch (ClientProtocolException ex) {
-				Log.e("ClientException thrown",ex.getMessage());
-				
-			} catch(IOException ex){
-				Log.e("IOexception",ex.getMessage());
+				Log.e("ClientException thrown", ex.getMessage());
+
+			} catch (IOException ex) {
+				Log.e("IOexception", ex.getMessage());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -305,11 +314,12 @@ public class ListFragment extends Fragment {
 		public void JSONParser(String response) throws JSONException {
 			JSONObject mainObject = new JSONObject(response);
 			Log.i("json object", mainObject.toString());
-			//int jsonresponse=mainObject.getInt("response");
+			// int jsonresponse=mainObject.getInt("response");
 			JSONArray dataObject = mainObject.getJSONArray("data");
-			Log.e("dataObject",dataObject.toString());
+			Log.e("dataObject", dataObject.toString());
 			for (int i = 0; i < dataObject.length(); i++) {
-				dataS.add( new Campaign().getInstance((JSONObject)dataObject.get(i)));
+				dataS.add(new Campaign().getInstance((JSONObject) dataObject
+						.get(i)));
 			}
 		}
 
@@ -318,15 +328,15 @@ public class ListFragment extends Fragment {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
 			// adapter.addAll(dataS);
-			if (!TextUtils.isEmpty(result)&&result!=null) {
+			if (!TextUtils.isEmpty(result) && result != null) {
 				adapter.refill(dataS);
 				Log.e("arraylist ", data.toString());
 			} else {
 				result = "Unable to Connect";
-				Toast.makeText(getActivity(), result,Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), result, Toast.LENGTH_LONG).show();
 			}
 			pBar.setVisibility(View.GONE);
-			//Toast.makeText(getActivity(), result, Toast.LENGTH_LONG).show();	
+			// Toast.makeText(getActivity(), result, Toast.LENGTH_LONG).show();
 		}
 	}
 
