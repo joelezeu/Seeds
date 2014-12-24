@@ -9,5 +9,10 @@
         app:showAsAction="always"
         android:title="@string/action_new">
     </item>
+    <item
+        android:id="@+id/settings"
+        android:title="Settings"
+        app:showAsAction="ifRoom"
+        android:showAsAction="ifRoom"></item>
 	
 </menu>

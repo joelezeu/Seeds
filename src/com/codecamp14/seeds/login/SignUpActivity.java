@@ -8,7 +8,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -133,15 +132,12 @@ public class SignUpActivity extends Activity {
 			try {
 				client.Execute(RequestMethod.POST);
 				int code = client.getResponseCode();
-				Log.i("response code",""+code);
 				if (code == HttpStatus.SC_CREATED||code==HttpStatus.SC_BAD_REQUEST) {
 					String res = client.getResponse();
-					Log.v("response from server",res);
 					JSONObject jsonreponse = new JSONObject(res);
 					return jsonreponse;
 				}
 			} catch (Exception e) {
-				Log.e("httperror",client.getErrorMessage());
 				e.printStackTrace();
 			}
 			return null;
@@ -155,7 +151,6 @@ public class SignUpActivity extends Activity {
 		@Override
 		protected void onPostExecute(JSONObject result) {
 			// TODO handling response better for the ui thread
-			Log.e("result from post execute",""+ result);
 			int responseCode = 0;
 			//if (result!=null) {
 				try {

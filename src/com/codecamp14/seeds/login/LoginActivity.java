@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -152,10 +151,8 @@ public class LoginActivity extends Activity {
 			try{
 				client.Execute(RequestMethod.POST);
 			int code=client.getResponseCode();
-			Log.v("Httpcode",""+code);
 			if(code==HttpStatus.SC_OK){
 				String res=client.getResponse();
-				Log.i("response",res);
 				JSONObject jsonreponse=new JSONObject(res);
 				return jsonreponse;
 			}
@@ -175,7 +172,6 @@ public class LoginActivity extends Activity {
 			int responseCode=0;
 			try {
 				responseCode = result.getInt("response");
-				Log.v("responsecode",""+responseCode);
 				if(responseCode==1){
 					onSuccess(result);
 				}else{

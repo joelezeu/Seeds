@@ -12,7 +12,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -55,7 +54,6 @@ public class MainActivity extends ActionBarActivity {
 		*/
 		SharedPreferences shared=getSharedPreferences(PREFS_NAME, 0);
 		String apiKey=shared.getString("api_key", null);
-		Log.e("apikey in main activity",String.valueOf(apiKey));
 		String name=shared.getString("name", null);
 		//if(currentUser == null){
 		if(TextUtils.isEmpty(apiKey)){
@@ -65,7 +63,6 @@ public class MainActivity extends ActionBarActivity {
 		startActivity(i);
 		}else{
 			//Log.i(TAG, currentUser.getUsername());
-			Log.i(TAG, name);
 		}
 		//getActionBar().getThemedContext().setTheme(resid);
 
@@ -81,9 +78,13 @@ public class MainActivity extends ActionBarActivity {
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
 
+//		navDrawerItems = new ArrayList<NavDrawerItem>();
+//		for (int i = 0; i < navMenuTitles.length; i++) {
+//			navDrawerItems.add(new NavDrawerItem(navMenuTitles[i], navMenuIcons.getResourceId(i, -1)));
+//		}
 		navDrawerItems = new ArrayList<NavDrawerItem>();
 		for (int i = 0; i < navMenuTitles.length; i++) {
-			navDrawerItems.add(new NavDrawerItem(navMenuTitles[i], navMenuIcons.getResourceId(i, -1)));
+			navDrawerItems.add(new NavDrawerItem(navMenuTitles[i]));
 		}
 
 
@@ -229,7 +230,6 @@ public class MainActivity extends ActionBarActivity {
 			mDrawerLayout.closeDrawer(mDrawerList);
 		} else {
 			// error in creating fragment
-			Log.e("MainActivity", "Error in creating fragment");
 		}
 	}
 
@@ -257,5 +257,7 @@ public class MainActivity extends ActionBarActivity {
 		// Pass any configuration change to the drawer toggls
 		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
+
+
 
 }

@@ -120,6 +120,13 @@ public class Campaign {
 		public Category getCategory() {
 			return category;
 		}
+		public double getPercentDonation(){
+			double percent=(totalDonations/goal)*100.0;
+			return percent;
+		}
+		public int getDaysLeft(){
+			return 2;
+		}
 		
 	
 

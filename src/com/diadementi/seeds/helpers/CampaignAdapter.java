@@ -58,10 +58,9 @@ public class CampaignAdapter extends ArrayAdapter<Campaign> {
 		category.setText(s.getCategory().getName());
 		Picasso.with(ctx)
 		.load(s.getImageUrl())
-		.resize(80, 80)
+		.resize(90, 90)
 		.centerCrop()
-		.placeholder(R.drawable.blank_campaign)
-		.error(R.drawable.ic_launcher)
+		.placeholder(R.drawable.progress)
 		.into(image);
 		Log.i("image url",s.getImageUrl());
 		TextView date=(TextView)convertView.findViewById(R.id.dateCreated);

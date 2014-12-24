@@ -5,15 +5,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Html;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,11 +23,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.codecamp.libs.RestClient;
+import com.codecamp.libs.RestClient.RequestMethod;
 import com.codecamp14.seeds.R;
 import com.codecamp14.seeds.models.Category;
-import com.diadementi.seeds.controllers.AddCampaignFragment;
 import com.diadementi.seeds.helpers.UrlLink;
 import com.diadementi.seeds.models.Campaign;
+import com.diadementi.seeds.util.Request;
+import com.diadementi.seeds.util.SeedsException;
 import com.diadementi.seeds.views.ListFragment.Type;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -50,6 +53,10 @@ public class UserDetailActivity extends ActionBarActivity {
 	String email;
 	TextView cTimeCreated;
 	TextView cAuthor;
+	TextView cPercentFunded;
+	TextView cDonors;
+	TextView cGoal;
+
 	final static int REQUEST_EDIT = 1;
 	public static final String PREFS_NAME = "MyPrefsFile";
 
@@ -70,49 +77,53 @@ public class UserDetailActivity extends ActionBarActivity {
 		donateBtn = (Button) this.findViewById(R.id.donate);
 		cTimeCreated = (TextView) this.findViewById(R.id.createdAt);
 		cAuthor = (TextView) this.findViewById(R.id.author);
+		cPercentFunded = (TextView) this.findViewById(R.id.percentFunded);
+		cDonors = (TextView) this.findViewById(R.id.donor);
+
+		cGoal = (TextView) this.findViewById(R.id.goal);
 		i = getIntent();
 		String type = i.getExtras().containsKey("type") ? i
 				.getStringExtra("type") : "PUB";
-				t = Type.valueOf(type);
-				mode = i.getExtras().containsKey("mode") ? i.getStringExtra("mode")
-						: mode;
-				if (savedInstanceState == null) {
-					mode = i.getExtras().containsKey("mode") ? i.getStringExtra("mode")
-							: mode;
-					// mode = i.getStringExtra("mode");
-					// mode=TextUtils.isEmpty(mode)?"view":mode;
+		t = Type.valueOf(type);
+		mode = i.getExtras().containsKey("mode") ? i.getStringExtra("mode")
+				: mode;
+		// if (savedInstanceState == null) {
+		// mode = i.getExtras().containsKey("mode") ? i.getStringExtra("mode")
+		// : mode;
+		// mode = i.getStringExtra("mode");
+		// mode=TextUtils.isEmpty(mode)?"view":mode;
 
-					switch (mode) {
-					case "add":
-						// getSupportFragmentManager().beginTransaction()
-						// .add(R.id.container, new CampaignFragment())
-						// .commit();
-						Intent in = new Intent(this, Add_EditActivity.class);
-						in.putExtras(i);
-						in.putExtra("mode", "add");
-						startActivity(in);
-						break;
-					case "edit":
-						// getSupportFragmentManager().beginTransaction()
-						// .add(R.id.container, new CampaignFragment())
-						// .commit();
-						Intent inte = new Intent(this, Add_EditActivity.class);
-						inte.putExtras(i);
-						inte.putExtra("mode", "edit");
-						startActivity(inte);
-						break;
-					default:
-						// String url = i.getStringExtra("url");
-						// getSupportFragmentManager().beginTransaction()
-						// .add(R.id.container, t.equals(Type.PRI)?new
-						// DetailsFragment(url,MODE.PRI):new DetailsFragment(url))
-						// .commit();
+		switch (mode) {
+		case "add":
+			// getSupportFragmentManager().beginTransaction()
+			// .add(R.id.container, new CampaignFragment())
+			// .commit();
+			Intent in = new Intent(this, Add_EditActivity.class);
+			in.putExtras(i);
+			in.putExtra("mode", "add");
+			startActivity(in);
+			break;
+		case "edit":
+			// getSupportFragmentManager().beginTransaction()
+			// .add(R.id.container, new CampaignFragment())
+			// .commit();
+			Intent inte = new Intent(this, Add_EditActivity.class);
+			inte.putExtras(i);
+			inte.putExtra("mode", "edit");
+			startActivity(inte);
+			break;
+		default:
+			// String url = i.getStringExtra("url");
+			// getSupportFragmentManager().beginTransaction()
+			// .add(R.id.container, t.equals(Type.PRI)?new
+			// DetailsFragment(url,MODE.PRI):new DetailsFragment(url))
+			// .commit();
 
-						extractCampaignFromJson(i);
+			extractCampaignFromJson(i);
 
-					}
+		}
 
-				}
+		// }
 	}
 
 	/**
@@ -120,29 +131,33 @@ public class UserDetailActivity extends ActionBarActivity {
 	 */
 	public void extractCampaignFromJson(Intent i) throws JsonSyntaxException {
 		String json = "";
-		json = i.getExtras().containsKey("json") ? i
-				.getStringExtra("json") : null;
-				if (!TextUtils.isEmpty(json)) {
-					Log.e("c in json", json);
-					c = new Gson().fromJson(json, Campaign.class);
-					Picasso.with(this).load(c.getImageUrl())
-					.placeholder(R.drawable.blank_campaign)
-					.error(R.drawable.ic_launcher).into(cImage);
-					Log.e("c title", c.getTitle());
-					cTitle.setText(toCapFirst(c.getTitle()));
-					cat = c.getCategory();
-					cCat.setText(c.getCategory().getName()
-							.toUpperCase(Locale.getDefault()));
-					cDescText.setText(c.getDesc());
-					String createdAt = c.getTimeCreated();
-					createdAt = convertTime(createdAt);
-					cAuthor.setText(String.format("by %s", c.getCreator()));
-					if (createdAt != null) {
-						cTimeCreated.setText(createdAt);
-					} else {
-						cTimeCreated.setVisibility(View.INVISIBLE);
-					}
-				}
+		json = i.getExtras().containsKey("json") ? i.getStringExtra("json")
+				: null;
+		if (!TextUtils.isEmpty(json)) {
+			c = new Gson().fromJson(json, Campaign.class);
+			Picasso.with(this).load(c.getImageUrl()).into(cImage);
+			try {
+				cPercentFunded.setText(Html.fromHtml(String.format(getString(R.string.percentfunded), c.getPercentDonation() + "%")
+						));
+			} catch (Exception ex) {
+				cPercentFunded.setText("0%");
+			}
+			cDonors.setText(Html.fromHtml(String.format(getString(R.string.num_donors), c.getTotalDonors())));
+			cGoal.setText(Html.fromHtml(String.format(getString(R.string._goal), c.getGoal())));
+			cTitle.setText(toCapFirst(c.getTitle()));
+			cat = c.getCategory();
+			cCat.setText(c.getCategory().getName()
+					.toUpperCase(Locale.getDefault()));
+			cDescText.setText(c.getDesc());
+			String createdAt = c.getTimeCreated();
+			createdAt = convertTime(createdAt);
+			cAuthor.setText(String.format("by %s", c.getCreator()));
+			if (createdAt != null) {
+				cTimeCreated.setText(createdAt);
+			} else {
+				cTimeCreated.setVisibility(View.INVISIBLE);
+			}
+		}
 	}
 
 	private String toCapFirst(String s) {
@@ -181,16 +196,11 @@ public class UserDetailActivity extends ActionBarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void discard() {
-		// TODO Auto-generated method stub
-
-	}
-
 	public void edit() {
 		Intent intent = new Intent(this, Add_EditActivity.class);
 		intent.putExtras(i);
 		intent.putExtra("mode", "edit");
-		startActivityForResult(intent, REQUEST_EDIT);
+		startActivity(intent);
 	}
 
 	public void sharePost() {
@@ -202,15 +212,44 @@ public class UserDetailActivity extends ActionBarActivity {
 		startActivity(shareIntent);
 	}
 
+	public void discard() {
+		final Context context = this;
+		Request<Void> action = new Request<Void>(RequestMethod.POST, null,
+				new Request.mCallBack<Void>() {
+
+					@Override
+					public void done(SeedsException e, Void object) {
+						// TODO Auto-generated method stub
+						if (e == null) {
+							finish();
+						} else {
+							if (e.getCode() > 0) {
+								Toast.makeText(context, e.getMessage(),
+										Toast.LENGTH_LONG).show();
+							}
+						}
+					}
+				}, new Request.Params() {
+
+					@Override
+					public void params(RestClient client) {
+						String apiKey = pref.getString("api_key", null);
+						client.AddHeader("Authorization", apiKey);
+					}
+				});
+		action.execute(UrlLink.delete + c.getId()+"/delete");
+	}
+
 	@Override
 	protected void onActivityResult(int arg0, int arg1, Intent arg2) {
 		// TODO Auto-generated method stub
 		super.onActivityResult(arg0, arg1, arg2);
-		if (arg0 == REQUEST_EDIT && arg1 == RESULT_OK){
-			i=arg2;
+		if (arg0 == REQUEST_EDIT && arg1 == RESULT_OK) {
+			i = arg2;
 		}
 	}
 
+	@SuppressLint("SimpleDateFormat")
 	private String convertTime(String cDate) {
 
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -226,11 +265,28 @@ public class UserDetailActivity extends ActionBarActivity {
 		}
 		return null;
 	}
-@Override
-protected void onResume() {
-	// TODO Auto-generated method stub
-	super.onResume();
-	extractCampaignFromJson(i);
-}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		// TODO Auto-generated method stub
+		super.onNewIntent(intent);
+		setIntent(intent);
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		i = getIntent();
+		extractCampaignFromJson(i);
+	}
+
+	@Override
+	protected void onRestart() {
+		// TODO Auto-generated method stub
+		super.onRestart();
+		i = getIntent();
+		extractCampaignFromJson(i);
+	}
 
 }

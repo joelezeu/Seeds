@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/list_selector"
+    android:background="#fff"
     android:padding="8dp" >
 
     <ImageView
@@ -16,10 +16,9 @@
         android:adjustViewBounds="true"
         android:contentDescription="@string/thumnail_of_campaign"
         android:paddingEnd="0dp"
-        android:paddingLeft="5dp"
         android:paddingStart="0dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/blank_campaign" />
+        android:background="@android:color/darker_gray"
+        android:scaleType="fitXY" />
 
     <TextView
         android:id="@+id/title"

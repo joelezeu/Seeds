@@ -5,15 +5,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Html;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,11 +21,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.codecamp14.seeds.R;
 import com.codecamp14.seeds.models.Category;
-import com.diadementi.seeds.controllers.AddCampaignFragment;
 import com.diadementi.seeds.helpers.UrlLink;
 import com.diadementi.seeds.models.Campaign;
 import com.diadementi.seeds.views.ListFragment.Type;
@@ -49,6 +47,9 @@ public class DetailActivity extends ActionBarActivity {
 	String email;
 	TextView cTimeCreated;
 	TextView cAuthor;
+	TextView cPercentFunded;
+	TextView cDonors;
+	TextView cGoal;
 	public static final String PREFS_NAME = "MyPrefsFile";
 
 	@Override
@@ -68,6 +69,9 @@ public class DetailActivity extends ActionBarActivity {
 		donateBtn = (Button) this.findViewById(R.id.donate);
 		cTimeCreated = (TextView) this.findViewById(R.id.createdAt);
 		cAuthor = (TextView) this.findViewById(R.id.author);
+		cPercentFunded = (TextView) this.findViewById(R.id.percentFunded);
+		cDonors = (TextView) this.findViewById(R.id.donor);
+		cGoal = (TextView) this.findViewById(R.id.goal);
 		i = getIntent();
 		String type = i.getExtras().containsKey("type") ? i
 				.getStringExtra("type") : "PUB";
@@ -110,12 +114,16 @@ public class DetailActivity extends ActionBarActivity {
 				json = i.getExtras().containsKey("json") ? i
 						.getStringExtra("json") : null;
 				if (!TextUtils.isEmpty(json)) {
-					Log.e("c in json", json);
 					c = new Gson().fromJson(json, Campaign.class);
-					Picasso.with(this).load(c.getImageUrl())
-							.placeholder(R.drawable.blank_campaign)
-							.error(R.drawable.ic_launcher).into(cImage);
-					Log.e("c title", c.getTitle());
+					Picasso.with(this).load(c.getImageUrl()).into(cImage);
+					try {
+						cPercentFunded.setText(Html.fromHtml(String.format(getString(R.string.percentfunded), c.getPercentDonation() + "%")
+								));
+					} catch (Exception ex) {
+						cPercentFunded.setText("0%");
+					}
+					cDonors.setText(Html.fromHtml(String.format(getString(R.string.num_donors), c.getTotalDonors())));
+					cGoal.setText(Html.fromHtml(String.format(getString(R.string._goal), c.getGoal())));
 					cTitle.setText(toCapFirst(c.getTitle()));
 					cat = c.getCategory();
 					cCat.setText(c.getCategory().getName()
@@ -169,10 +177,10 @@ public class DetailActivity extends ActionBarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void comment(View view) {
+	/*public void comment(View view) {
 		// TODO Auto-generated method stub
 		Toast.makeText(this, "commented", Toast.LENGTH_LONG).show();
-	}
+	}*/
 
 	public void sharePost() {
 		// TODO Auto-generated method stub
@@ -190,6 +198,7 @@ public class DetailActivity extends ActionBarActivity {
 		startActivity(intent);
 	}
 
+	@SuppressLint("SimpleDateFormat")
 	private String convertTime(String cDate) {
 
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

@@ -21,8 +21,9 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,11 +33,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codecamp.libs.RestClient;
 import com.codecamp.libs.RestClient.RequestMethod;
 import com.codecamp14.seeds.R;
+import com.codecamp14.seeds.SettingsActivity;
 import com.codecamp14.seeds.login.LoginActivity;
 import com.diadementi.seeds.helpers.Alert;
 import com.diadementi.seeds.helpers.CampaignAdapter;
@@ -49,12 +52,13 @@ import com.google.gson.Gson;
  * 
  */
 public class ListFragment extends Fragment {
-	ListView list;
-	ProgressBar pBar;
-	ArrayList<Campaign> data;
-	CampaignAdapter adapter;
-	String url;
+	protected ListView list;
+	protected ProgressBar pBar;
+	protected ArrayList<Campaign> data;
+	protected CampaignAdapter adapter;
+	protected String url;
 	private Type type;
+	protected SwipeRefreshLayout mSwipeRefreshLayout;
 
 	public static enum Type {
 		PRI, PUB;
@@ -122,7 +126,13 @@ public class ListFragment extends Fragment {
 				container, false);
 
 		list = (ListView) rootView.findViewById(R.id.campaignList);
+		TextView emptyTextView = (TextView) rootView
+				.findViewById(android.R.id.empty);
+		list.setEmptyView(emptyTextView);
 		pBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+		mSwipeRefreshLayout = (SwipeRefreshLayout) rootView
+				.findViewById(R.id.swipeRefreshLayout);
+		mSwipeRefreshLayout.setOnRefreshListener(mOnRefreshListener);
 		pBar.setVisibility(View.INVISIBLE);
 		adapter = new CampaignAdapter(getActivity(), R.layout.list_row, data);
 
@@ -154,6 +164,15 @@ public class ListFragment extends Fragment {
 		return rootView;
 
 	}
+
+	protected OnRefreshListener mOnRefreshListener = new OnRefreshListener() {
+
+		@Override
+		public void onRefresh() {
+			// TODO Auto-generated method stub
+			makeRequest(url);
+		}
+	};
 
 	/*
 	 * (non-Javadoc)
@@ -231,6 +250,8 @@ public class ListFragment extends Fragment {
 			break;
 		case R.id.action_edit:
 			edit();
+		case R.id.settings:
+			openSettings();
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -247,6 +268,12 @@ public class ListFragment extends Fragment {
 		Intent intent = new Intent(getActivity(), Add_EditActivity.class);
 		intent.putExtra("mode", "add");
 		startActivity(intent);
+	}
+
+	public void openSettings() {
+		Intent settingsIntent = new Intent(getActivity(),
+				SettingsActivity.class);
+		startActivity(settingsIntent);
 	}
 
 	class CampaignFetch extends AsyncTask<String, Void, String> {
@@ -281,7 +308,6 @@ public class ListFragment extends Fragment {
 			dami = new RestClient(url[0]);
 			try {
 				dami.AddHeader("Authorization", apiKey);
-				Log.e("apikey", apiKey);
 				dami.setTimeOut(30000);
 				dami.Execute(RequestMethod.GET);
 				int code = dami.getResponseCode();
@@ -293,14 +319,14 @@ public class ListFragment extends Fragment {
 				}
 				;
 				text = dami.getResponse();
-				Log.i("json data", text);
 				JSONParser(text);
 				return response = "successful";
+			} catch (JSONException e) {
+				e.printStackTrace();
 			} catch (ClientProtocolException ex) {
-				Log.e("ClientException thrown", ex.getMessage());
 
-			} catch (IOException ex) {
-				Log.e("IOexception", ex.getMessage());
+			} catch (IOException e) {
+				e.printStackTrace();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -313,13 +339,9 @@ public class ListFragment extends Fragment {
 		 */
 		public void JSONParser(String response) throws JSONException {
 			JSONObject mainObject = new JSONObject(response);
-			Log.i("json object", mainObject.toString());
-			// int jsonresponse=mainObject.getInt("response");
 			JSONArray dataObject = mainObject.getJSONArray("data");
-			Log.e("dataObject", dataObject.toString());
 			for (int i = 0; i < dataObject.length(); i++) {
-				dataS.add(new Campaign().getInstance((JSONObject) dataObject
-						.get(i)));
+				dataS.add(Campaign.getInstance((JSONObject) dataObject.get(i)));
 			}
 		}
 
@@ -329,12 +351,20 @@ public class ListFragment extends Fragment {
 			super.onPostExecute(result);
 			// adapter.addAll(dataS);
 			if (!TextUtils.isEmpty(result) && result != null) {
-				adapter.refill(dataS);
-				Log.e("arraylist ", data.toString());
+				if (!dataS.isEmpty())
+					adapter.refill(dataS);
+				else {
+					TextView empty = (TextView) list.getEmptyView();
+					empty.setText(getString(R.string.no_item));
+				}
 			} else {
-				result = "Unable to Connect";
+				result = "Unable to reach server";
 				Toast.makeText(getActivity(), result, Toast.LENGTH_LONG).show();
+				TextView empty = (TextView) list.getEmptyView();
+				empty.setText(getString(R.string.no_item));
 			}
+			if (mSwipeRefreshLayout.isRefreshing())
+				mSwipeRefreshLayout.setRefreshing(false);
 			pBar.setVisibility(View.GONE);
 			// Toast.makeText(getActivity(), result, Toast.LENGTH_LONG).show();
 		}

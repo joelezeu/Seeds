@@ -1,61 +1,50 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     tools:context="com.diadementi.seeds.views.DetailActivity" >
 
-    <FrameLayout
-        android:id="@+id/container"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true" >
-    </FrameLayout>
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true" >
+        android:layout_height="wrap_content"
+        android:background="#fff" >
 
-        <RelativeLayout
+        <LinearLayout
+            android:id="@+id/intro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#fff" >
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="0dp"
+                android:background="#e6e6e6"
+                android:padding="5dp"
+                android:text="@string/category"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginStart="0dp"
+                android:text="@string/title"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textStyle="bold"
+                android:typeface="sans" />
 
             <LinearLayout
-                android:id="@+id/intro"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/category"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginStart="0dp"
-                    android:background="#e6e6e6"
-                    android:padding="5dp"
-                    android:text="@string/category"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginStart="0dp"
-                    android:text="@string/title"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:textStyle="bold"
-                    android:typeface="sans" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal" >
-                
+                android:orientation="horizontal" >
 
                 <TextView
                     android:id="@+id/author"
@@ -74,90 +63,134 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="0dp"
-                    android:layout_weight="0"
-                    android:layout_marginRight="10dp"
                     android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="0"
                     android:gravity="end"
                     android:padding="5dp"
                     android:text="@string/author" />
-                </LinearLayout>
             </LinearLayout>
+        </LinearLayout>
 
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_below="@+id/intro"
-                android:layout_marginTop="5dp"
-                android:adjustViewBounds="true"
-                android:contentDescription="@string/placeHolder"
-                android:scaleType="fitXY"
-                android:src="@drawable/abc_ab_stacked_solid_dark_holo" />
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_below="@+id/intro"
+            android:layout_marginTop="5dp"
+            android:adjustViewBounds="true"
+            android:background="@android:color/darker_gray"
+            android:contentDescription="@string/placeHolder"
+            android:scaleType="fitXY"
+            android:src="@drawable/abc_ab_stacked_solid_dark_holo" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/imageView"
+            android:orientation="vertical" >
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/imageView"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/desc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="5dp"
-                    android:background="#e6e6e6"
-                    android:padding="6dp"
-                    android:text="@string/description"
-                    android:textAppearance="?android:attr/textAppearanceSmallInverse"
-                    android:textColor="?android:attr/textColorSecondary" />
-
-                <TextView
-                    android:id="@+id/descText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="0dp"
-                    android:paddingBottom="40dp"
-                    android:paddingLeft="6dp"
-                    android:paddingRight="6dp"
-                    android:text="@string/description_text" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/action"
-                style="?android:attr/buttonBarStyle"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_alignParentBottom="true"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="10" >
+                android:padding="10dp"
+                android:weightSum="15" >
 
-                <Button
-                    android:id="@+id/comment"
-                    style="?android:attr/buttonBarButtonStyle"
+                <TextView
+                    android:id="@+id/percentFunded"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="0dp"
-                    android:layout_marginRight="0dp"
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="0dp"
                     android:layout_weight="5"
-                    android:onClick="sharePost"
-                    android:text="@string/action_share"
-                    android:textSize="13sp" />
+                    android:gravity="center_horizontal"
+                    android:padding="5dp"
+                    android:text="@string/percentfunded"/>
 
-                <Button
-                    android:id="@+id/donate"
-                    style="?android:attr/buttonBarButtonStyle"
+                <TextView
+                    android:id="@+id/donor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
                     android:layout_weight="5"
-                    android:onClick="donate"
-                    android:text="@string/action_donate"
-                    android:textSize="13sp" />
+                    android:gravity="center_horizontal"
+                    android:padding="5dp"
+                    android:text="@string/num_donors" />
+
+                <TextView
+                    android:id="@+id/goal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="5"
+                    android:gravity="center_horizontal"
+                    android:padding="5dp"
+                    android:text="@string/_goal" />
             </LinearLayout>
-        </RelativeLayout>
-    </ScrollView>
 
-</RelativeLayout>
+            <TextView
+                android:id="@+id/desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:background="#e6e6e6"
+                android:padding="6dp"
+                android:text="@string/description"
+                android:textAppearance="?android:attr/textAppearanceSmallInverse"
+                android:textColor="?android:attr/textColorSecondary" />
+
+            <TextView
+                android:id="@+id/descText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="0dp"
+                android:paddingBottom="40dp"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:text="@string/description_text" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/action"
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:weightSum="10" >
+
+            <Button
+                android:id="@+id/comment"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_weight="5"
+                android:onClick="sharePost"
+                android:text="@string/action_share"
+                android:textSize="13sp" />
+
+            <Button
+                android:id="@+id/donate"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:onClick="donate"
+                android:text="@string/action_donate"
+                android:textSize="13sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</ScrollView>
